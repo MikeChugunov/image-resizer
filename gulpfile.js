@@ -12,50 +12,32 @@ gulp.task('resize-images', () => {
         gulp.src( src + '/*')
 
     //Очищаем содержимое
-    del([ build + '/*'])
+    del.sync([ build + '/*'])
+
+	srcImages
+      .pipe(jimp({
+        '': {
+            scale: 0.33, // 33%
+        }
+      }))
+      .pipe(gulp.dest(build + "/mdpi"));
 
     srcImages
       .pipe(jimp({
-        '-mdpi': {
-            scaleToFit: {width: 640, height: 640}, //Вписать изображение в 64х64
-        },
-        '-hdpi': {
-            scale: 0.8, // 80%
-        },
-        '-resize640': {
-            resize: {width: 640, height: 640}, // тупой ресайз
-        },
-        '-cover640': {
-            cover: {width: 640, height: 640}, // замостить, или как оно там
-        },
-
-        //свистоперделки, смотри опции какие есть, и это не все!1
-        '-1': {
-            crop: { x: 100, y: 100, width: 200, height: 200 },
-            invert: true,
-            flip: { horizontal: true, vertical: true },
-            gaussian: 2,
-            blur: 2,
-            greyscale: true,
-            sepia: true,
-            opacity: 0.5,
-        },
-        '-2': {
-            resize: { width: 100, height: 100 },
-            scale: 1.2,
-            rotate: 90,
-            brightness: 0.5,
-            contrast: 0.3,
-            type: 'bitmap'
-        },
-        '-3': {
-            posterize: 2,
-            dither565: true,
-            background: '#ff0000',
-            type: 'jpg'
+        '': {
+            scale: 0.5, // 50%
         }
       }))
-      .pipe(gulp.dest(build));
+      .pipe(gulp.dest(build + "/hdpi"));
+
+    srcImages
+      .pipe(jimp({
+        '': {
+            scale: 0.66, // 66%
+        }
+      }))
+      .pipe(gulp.dest(build + "/xhdpi"));
+   
 })
 
 gulp.task('default', ['resize-images'])
